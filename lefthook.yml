@@ -1,0 +1,19 @@
+# lefthook.yml
+pre-commit:
+  commands:
+    biome-check:
+      glob: "*.{js,ts,json}"
+      run: npx @biomejs/biome check --write --no-errors-on-unmatched {staged_files}
+      stage_fixed: true
+
+commit-msg:
+  commands:
+    commitlint:
+      run: npx --no -- commitlint --edit {1}
+
+pre-push:
+  commands:
+    type-check:
+      run: npm run type-check
+    test:
+      run: npm test
