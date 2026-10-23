@@ -1,0 +1,197 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API de Gestão de Pessoas (CRUD)",
+    "version": "1.0.0",
+    "description": "API RESTful para cadastro de pessoas com cálculo dinâmico de idade desenvolvida para a disciplina de CI/CD."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Servidor Local"
+    }
+  ],
+  "paths": {
+    "/users": {
+      "post": {
+        "summary": "Cadastra um novo usuário",
+        "tags": ["Usuários"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Usuário criado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": { "description": "Dados inválidos ou data no futuro" },
+          "409": { "description": "CPF já cadastrado" }
+        }
+      },
+      "get": {
+        "summary": "Lista todos os usuários",
+        "tags": ["Usuários"],
+        "responses": {
+          "200": {
+            "description": "Lista de usuários cadastrados",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{cpf}": {
+      "get": {
+        "summary": "Busca um usuário pelo CPF",
+        "tags": ["Usuários"],
+        "parameters": [
+          {
+            "name": "cpf",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Usuário encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "404": { "description": "Usuário não encontrado" }
+        }
+      },
+      "put": {
+        "summary": "Atualiza os dados de um usuário pelo CPF",
+        "tags": ["Usuários"],
+        "parameters": [
+          {
+            "name": "cpf",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Usuário atualizado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "404": { "description": "Usuário não encontrado" }
+        }
+      },
+      "patch": {
+        "summary": "Atualiza parcialmente os dados de um usuário pelo CPF",
+        "tags": ["Usuários"],
+        "parameters": [
+          {
+            "name": "cpf",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Usuário atualizado com sucesso" },
+          "404": { "description": "Usuário não encontrado" }
+        }
+      },
+      "delete": {
+        "summary": "Remove um usuário pelo CPF",
+        "tags": ["Usuários"],
+        "parameters": [
+          {
+            "name": "cpf",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "204": { "description": "Usuário removido com sucesso" },
+          "404": { "description": "Usuário não encontrado" }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "cpf": { "type": "string", "example": "12345678901" },
+          "name": { "type": "string", "example": "João da Silva" },
+          "birthDate": { "type": "string", "format": "date", "example": "2000-01-15" },
+          "age": { "type": "integer", "example": 26 }
+        }
+      },
+      "CreateUserInput": {
+        "type": "object",
+        "required": ["cpf", "name", "birthDate"],
+        "properties": {
+          "cpf": { "type": "string", "example": "12345678901" },
+          "name": { "type": "string", "example": "João da Silva" },
+          "birthDate": { "type": "string", "format": "date", "example": "2000-01-15" }
+        }
+      },
+      "UpdateUserInput": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string", "example": "João da Silva Santos" },
+          "birthDate": { "type": "string", "format": "date", "example": "1999-12-25" }
+        }
+      }
+    }
+  }
+}
