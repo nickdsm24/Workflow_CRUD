@@ -9,6 +9,9 @@ export const app = express();
 
 app.use(express.json());
 
+// Serve os arquivos estáticos do frontend (public/index.html)
+app.use(express.static('public'));
+
 const swaggerDocument = JSON.parse(fs.readFileSync(path.resolve('src/docs/swagger.json'), 'utf-8'));
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
